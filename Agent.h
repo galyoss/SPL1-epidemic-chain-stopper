@@ -13,7 +13,8 @@ public:
     Agent(Session& session);
 
     virtual void act()=0;
-private:
+
+protected:
     Session& session;
 };
 

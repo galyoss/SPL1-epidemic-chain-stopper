@@ -3,3 +3,6 @@
 //
 
 #include "Tree.h"
+
+
+Tree::Tree(int rootLabel) {}

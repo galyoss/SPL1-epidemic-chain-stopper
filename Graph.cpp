@@ -10,3 +10,12 @@ void Graph::removeEdge(int vertexA, int vertexB) {
     edges [vertexB][vertexA]=0;
 
 }
+// going over neighbors and returning vector with their number
+vector<int> Graph::neighborsOf(int vertexA) {
+    vector<int> ans;
+    for (int i = 0; i < edges.size(); ++i) {
+        if (edges[vertexA][i]==1)
+            ans.push_back(i);
+    }
+    return ans;
+}
