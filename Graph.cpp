@@ -19,3 +19,16 @@ vector<int> Graph::neighborsOf(int vertexA) {
     }
     return ans;
 }
+
+Graph::Graph(std::vector<std::vector<int>> matrix):edges(matrix) {
+
+}
+
+Graph::Graph() {
+
+}
+
+void Graph::updateGraph(vector <vector<int>> matrix) {
+    edges = matrix;
+
+}
