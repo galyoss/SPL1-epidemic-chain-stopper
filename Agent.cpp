@@ -3,11 +3,13 @@
 //
 
 #include "Agent.h"
+#include "iostream"
 
 
 Agent::Agent() {}
 
-Agent::~Agent() {}
+
+
 
 
 //============RULE OF 5============
@@ -24,7 +26,7 @@ ContactTracer::ContactTracer(const ContactTracer &other) {
 
 
 //Destruct
-//ContactTracer::~ContactTracer() {}
+ContactTracer::~ContactTracer() {}
 
 
 ContactTracer *ContactTracer::clone() const {
@@ -46,7 +48,9 @@ Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) {
         //IMPLEMENTED!!!
 }
 //destructor
-Virus::~Virus() {}
+Virus::~Virus() {
+    delete &nodeInd;
+}
 
 //void Virus::act(Session &session) {} TBD!!!
 

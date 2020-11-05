@@ -6,15 +6,16 @@
 #define SPL_ASSIGNMENT1_AGENT_H
 
 #include <vector>
+#include "Session.h"
 
 
 
 class Agent{
 public:
     Agent();
-    ~Agent();
+    virtual ~Agent()=0;
     virtual Agent* clone() const;
- //   virtual void act(Session& session)=0;
+    virtual void act(Session& session)=0;
 };
 
 class ContactTracer: public Agent{
@@ -24,7 +25,7 @@ public:
     ContactTracer(const ContactTracer& other);
     ContactTracer* clone() const;
 
-  //  virtual void act(Session& session);
+    virtual void act(Session& session);
 };
 
 
@@ -35,7 +36,7 @@ public:
     ~Virus();
     Virus* clone() const;
 
-  //  virtual void act(Session& session);
+    virtual void act(Session& session);
 private:
     const int nodeInd;
 };
