@@ -4,8 +4,10 @@
 
 #ifndef ASSIGNMENT1_SESSION_H
 #define ASSIGNMENT1_SESSION_H
+
 #include "Graph.h"
 #include <iostream>
+#include "Agent.h"
 class Agent;
 
 enum TreeType{
@@ -16,6 +18,7 @@ enum TreeType{
 
 class Session{
 public:
+
     Session(const std::string& path);
     void simulate();
     void addAgent(const Agent& agent);

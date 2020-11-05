@@ -6,31 +6,36 @@
 #define SPL_ASSIGNMENT1_AGENT_H
 
 #include <vector>
-#include "Session.h"
+
+
 
 class Agent{
 public:
-    Agent(Session& session);
-
-    virtual void act()=0;
-
-protected:
-    Session& session;
+    Agent();
+    ~Agent();
+    virtual Agent* clone() const;
+ //   virtual void act(Session& session)=0;
 };
 
 class ContactTracer: public Agent{
 public:
-    ContactTracer(Session& session);
+    ContactTracer();
+    ~ContactTracer();
+    ContactTracer(const ContactTracer& other);
+    ContactTracer* clone() const;
 
-    virtual void act();
+  //  virtual void act(Session& session);
 };
 
 
 class Virus: public Agent{
 public:
-    Virus(int nodeInd, Session& session);
+    Virus(int _nodeInd);
+    Virus(const Virus& vir);
+    ~Virus();
+    Virus* clone() const;
 
-    virtual void act();
+  //  virtual void act(Session& session);
 private:
     const int nodeInd;
 };

@@ -15,7 +15,7 @@ RootTree::RootTree(int rootLabel) : Tree(rootLabel) {
 
 }
 
-
+/*
 
 Tree *Tree::createTree(const Session &session, int rootLabel) {
     Graph g = session.getGraph();
@@ -30,12 +30,12 @@ Tree *Tree::createTree(const Session &session, int rootLabel) {
     while (!Q.empty()){
         int curr = Q.pop();
     }
-
-
-
-
-
 }
+*/
+
+
+
+
 
 Tree::Tree(int rootLabel):node(0), children() {
     std::cout << "built tree" << std::endl;
