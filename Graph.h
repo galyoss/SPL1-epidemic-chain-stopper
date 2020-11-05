@@ -11,9 +11,10 @@ using namespace std;
 class Graph{
 public:
     Graph(std::vector<std::vector<int>> matrix);
-
+    Graph();
     void infectNode(int nodeInd);
     bool isInfected(int nodeInd);
+    void updateGraph(vector<vector<int>> matrix);
     void removeEdge(int vertexA, int vertexB);
     vector<int> neighborsOf(int vertexA);
 private:
