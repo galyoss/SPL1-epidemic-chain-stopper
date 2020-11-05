@@ -15,6 +15,7 @@ public:
     void infectNode(int nodeInd);
     bool isInfected(int nodeInd);
     void updateGraph(vector<vector<int>> matrix);
+    int getSize() const;
     void removeEdge(int vertexA, int vertexB);
     vector<int> neighborsOf(int vertexA);
 private:

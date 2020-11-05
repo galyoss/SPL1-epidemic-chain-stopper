@@ -44,4 +44,10 @@ void Session::setGraph(const Graph &graph) {
     g = graph;
 }
 
+Graph Session::getGraph() const {
+    return g;
+}
+
+
+
 

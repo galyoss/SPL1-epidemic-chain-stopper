@@ -32,3 +32,7 @@ void Graph::updateGraph(vector <vector<int>> matrix) {
     edges = matrix;
 
 }
+
+int Graph::getSize() const {
+    return edges.size();
+}

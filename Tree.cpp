@@ -4,21 +4,37 @@
 
 #include "Tree.h"
 #include <vector>
+#include <queue>
 #include "Session.h"
 using namespace std;
 
+//=========Root tree constructors=========
+
+//
+RootTree::RootTree(int rootLabel) : Tree(rootLabel) {
+
+}
+
+
 
 Tree *Tree::createTree(const Session &session, int rootLabel) {
+    Graph g = session.getGraph();
+
+    vector<bool> visited(g.getSize(),false);
+    queue<int> Q;
+
+    // visited source
+    Q.push(rootLabel);
+    visited[rootLabel]=true;
+
+    while (!Q.empty()){
+        int curr = Q.pop();
+    }
 
 
-    vector<bool> visited;
-    CycleTree *root = new CycleTree();
 
 
 
-
-
-    return root;
 }
 
 Tree::Tree(int rootLabel):node(0), children() {
@@ -36,3 +52,4 @@ Tree::Tree(int rootLabel):node(0), children() {
 int CycleTree::traceTree() {
     return 0;
 }
+
