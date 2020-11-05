@@ -20,7 +20,7 @@ public:
     void simulate();
     void addAgent(const Agent& agent);
     void setGraph(const Graph& graph);
-
+    int getCycleNum() const;
     void enqueueInfected(int);
     int dequeueInfected();
     TreeType getTreeType() const;
@@ -30,6 +30,7 @@ private:
     Graph g;
     TreeType treeType;
     std::vector<Agent*> agents;
+    int cycleNum;
 };
 
 #endif //ASSIGNMENT1_SESSION_H

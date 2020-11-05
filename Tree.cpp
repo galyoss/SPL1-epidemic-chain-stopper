@@ -9,26 +9,30 @@ using namespace std;
 
 
 Tree *Tree::createTree(const Session &session, int rootLabel) {
-    Session->
-    int treeType -> Session treeType;
-    if (treeType==cTree)
-        CycleTree root (source,Session getCycleNumber);
-    else if(treeType=rTree)
-        Tree::RootTree root(source);
-    else
-        MaxRankTree root(source);
+
+
+    vector<bool> visited;
+    CycleTree *root = new CycleTree();
+
+
+
+
+
     return root;
-    return nullptr;
-}
-(int rootLabel): node(rootLabel), children(vector<Tree*>()){}
-
-
-
-
-
-// returns tree using BFS algorithm
-Tree Graph::runBFS(int source, int treeType) {
-
 }
 
+Tree::Tree(int rootLabel):node(0), children() {
+    std::cout << "built tree" << std::endl;
+}
 
+//TreeType treeType1 = session.getTreeType();
+//if (treeType1==Cycle)
+//CycleTree* root =new CycleTree(rootLabel,session.getCycleNum());
+//else if(treeType1=Root)
+//RootTree* root = new RootTree(rootLabel);
+//else
+//MaxRankTree* root = new MaxRankTree(rootLabel);
+
+int CycleTree::traceTree() {
+    return 0;
+}

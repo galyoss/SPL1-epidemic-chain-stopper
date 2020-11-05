@@ -8,16 +8,13 @@
 #include <vector>
 using namespace std;
 class Session;
-const int cTree =0;
-const int rTree =1;
-const int mrTree =2;
 class Tree{
 public:
     Tree(int rootLabel);
     void addChild(const Tree& child);
 
 
-    static Tree* createTree(const Session& session, int rootLabel);
+    static Tree* createTree(const Session& session, int rootLabel); //creating runs BFS
     virtual int traceTree()=0;
 
 protected:
@@ -28,7 +25,7 @@ protected:
 class CycleTree: public Tree{
 public:
     CycleTree(int rootLabel, int currCycle);
-    virtual int traceTree();
+    virtual int traceTree();//returns next node to act on
 private:
     int currCycle;
 };
