@@ -6,7 +6,8 @@
 #define SPL_ASSIGNMENT1_GRAPH_H
 using namespace std;
 #include <vector>
-
+#include "Tree.h"
+#include "Session.h"
 class Graph{
 public:
     Graph(std::vector<std::vector<int>> matrix);
@@ -15,7 +16,6 @@ public:
     bool isInfected(int nodeInd);
     void removeEdge(int vertexA, int vertexB);
     vector<int> neighborsOf(int vertexA);
-
 private:
     std::vector<std::vector<int>> edges;
 };

@@ -6,9 +6,11 @@
 #define SPL_ASSIGNMENT1_TREE_H
 #include <iostream>
 #include <vector>
-
+using namespace std;
 class Session;
-
+const int cTree =0;
+const int rTree =1;
+const int mrTree =2;
 class Tree{
 public:
     Tree(int rootLabel);
