@@ -7,7 +7,7 @@
 using namespace std;
 #include <vector>
 #include "Tree.h"
-
+#include <queue>
 class Graph{
 public:
     Graph(std::vector<std::vector<int>> matrix);
@@ -18,8 +18,14 @@ public:
     int getSize() const;
     void removeEdge(int vertexA, int vertexB);
     vector<int> neighborsOf(int vertexA);
+    bool isDead(int nodeInd);
+    void moveToDead(int nodeInd);
 private:
     std::vector<std::vector<int>> edges;
+    queue<int> infected;
+    vector<int> dead;
+
+
 };
 
 #endif //SPL_ASSIGNMENT1_GRAPH_H

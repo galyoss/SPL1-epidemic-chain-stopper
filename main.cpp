@@ -7,6 +7,5 @@ int main() {
     Session *sesh = new Session("../config1.json");
     sesh->simulate();
 
-
     return 0;
 }

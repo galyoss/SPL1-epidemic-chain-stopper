@@ -36,3 +36,16 @@ void Graph::updateGraph(vector <vector<int>> matrix) {
 int Graph::getSize() const {
     return edges.size();
 }
+
+bool Graph::isDead(int nodeInd) {
+    for (int i = 0; i <dead.size() ; ++i)
+        if (dead[i]==nodeInd)
+            return true;
+
+    return false;
+}
+
+void Graph::moveToDead(int nodeInd) {
+    dead.push_back(nodeInd);
+
+}
