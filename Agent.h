@@ -14,10 +14,14 @@ class Agent{
 public:
     Agent();
     virtual ~Agent()=0;
-    virtual Agent* clone() const;
+    virtual Agent* clone() const = default;
     virtual void act(Session& session)=0;
-    virtual bool isVirus()=0;
+
+    virtual bool isVirus() const =0;
 private:
+
+
+
 };
 
 class ContactTracer: public Agent{
@@ -26,10 +30,12 @@ public:
     ~ContactTracer();
     ContactTracer(const ContactTracer& other);
     ContactTracer* clone() const;
-    bool isVirus();
+    bool isVirus() const;
+
     void act(Session& session);
 private:
-   const bool isVirus;
+    bool VIRUS;
+
 };
 
 
@@ -40,12 +46,13 @@ public:
     ~Virus();
     Virus* clone() const;
     int getNode();
-    bool isVirus();
-    bool isDead(int nodeInd);
+    bool isVirus() const;
+
     void act(Session& session);
 private:
     const int nodeInd;
-    const bool isVirus;
+    bool VIRUS;
+
 };
 
 #endif //SPL_ASSIGNMENT1_AGENT_H

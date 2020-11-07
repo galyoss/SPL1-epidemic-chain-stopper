@@ -49,3 +49,15 @@ void Graph::moveToDead(int nodeInd) {
     dead.push_back(nodeInd);
 
 }
+
+bool Graph::isInfected(int nodeInd) {
+    for (int i = 0; i < infectedNodes.size(); ++i)
+        if (infectedNodes[i]==nodeInd)
+            return true;
+    return false;
+}
+
+void Graph::infectNode(int nodeInd) {
+    infectedNodes.push_back(nodeInd);
+    infectedQ.push(nodeInd);
+}

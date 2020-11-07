@@ -10,34 +10,36 @@ Agent::Agent() {}
 
 
 
-
-
-
 //============RULE OF 5============
 
 //Empty constructor
-ContactTracer::ContactTracer():isVirus(false) {
+ContactTracer::ContactTracer():VIRUS(false) {
         //IMPLEMENTED
 }
 
 //COPY constructor
-ContactTracer::ContactTracer(const ContactTracer &other):isVirus(other.isVirus) {
+ContactTracer::ContactTracer(const ContactTracer &other):VIRUS(other.isVirus()) {
     //IMPLEMENTED
 }
 
 
 //Destruct
-ContactTracer::~ContactTracer() {}
+ContactTracer::~ContactTracer() {
+    delete &VIRUS;
+}
 
 
 ContactTracer *ContactTracer::clone() const {
     return new ContactTracer(*this);
 }
 
-void ContactTracer::act(Session &session) {} //TBD
+void ContactTracer::act(Session &session) {
 
-bool ContactTracer::isVirus() {
-    return isVirus;
+}
+
+ bool ContactTracer::isVirus() const {
+    return VIRUS;
+
 }
 
 //============================================================================
@@ -45,45 +47,43 @@ bool ContactTracer::isVirus() {
 //========= RULE OF 5=============
 
 //constructor
-Virus::Virus(int _nodeInd):nodeInd(_nodeInd), isVirus(true){
+Virus::Virus(int _nodeInd):nodeInd(_nodeInd), VIRUS(true){
         //IMPLEMENTED!!!
 }
 //copy constructor
-Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) ,isVirus(vir.isVirus){
+Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) ,VIRUS(vir.isVirus()){
         //IMPLEMENTED!!!
 }
 //destructor
 Virus::~Virus() {
     delete &nodeInd;
-    delete &isVirus;
+    delete &VIRUS;
 }
 
 
-bool Virus::isVirus() {
-    return isVirus;
+bool Virus::isVirus() const {
+    return VIRUS;
 }
 
 void Virus::act(Session &session) {
     vector<int> neighbors = session.getGraph().neighborsOf(nodeInd); //saving neighbors in vector
-    if(!session.getGraph().isInfected(nodeInd))     //if this node is not infected yet, infect it
+    if(!session.getGraph().isInfected(nodeInd))     //if this node is not infectedQ yet, infect it
           session.getGraph().infectNode(nodeInd);
 
-    if (!session.getGraph().isDead(nodeInd)) //it is\was in infected Q, just need to kill it
-        session.getGraph().moveToDead(nodeInd);
 
     sort(neighbors.begin(),neighbors.end()); //sorting neighbors by size
     bool didInfect = false;
     for (int i = 0; i <neighbors.size() ; ++i) { //finding lowest neighbor to infect
         if (!session.getGraph().isInfected(neighbors[i])) {
-//            Virus vir(i);//TODO
+            Virus vir(i);
             session.addAgent(vir);
             session.increaseViruses();
             didInfect=true;
             break;
         }
     }
-    if (isDead(nodeInd)&&!didInfect) //we didnt infect anyone, and we are red already
-        session.
+    if (!didInfect) //we didnt infect anyone, and we are red already
+        session.deactivateVirus(nodeInd);
 
     }
 

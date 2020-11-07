@@ -42,7 +42,7 @@ Session::Session(const std::string &path):g() {
         else
         {
             ContactTracer ct();
-            addAgent(ct())
+            addAgent(ct());
         }
     }
 }
@@ -50,11 +50,15 @@ Session::Session(const std::string &path):g() {
 // running the whole thing (functions and workflow)
 
 void Session::simulate() {
-    while (hasVirus()==true){
+    while (numOfViruses!=0){
     // creating turns in each cycle
-    for (int i = 0; i < agents.size() ; ++i) {}
+    for (int i = 0; i < agents.size() ; ++i) {
         // turns is only with ints, any int which is a number means its a virus, if its -1 its contact tracer
-//        turns.push() (agents number (-1 for CT, or other non negative int based of the virus's location));
+        if (agents[i]) {}
+    }
+
+
+        //(-1 for CT, or other non negative int based of the virus's location));
 
 
             int current = turns.front();
@@ -93,12 +97,24 @@ void Session::decreaseViruses(){
 void Session::increaseViruses() {
     numOfViruses++;
 }
-void Session::eraseAgent(int nodeInd){
-    for (int i = 0; i < agents.size(); ++i) {
-        if (agents[i].==nodeInd)
 
+void Session::deactivateVirus(int nodeInd) {//TBD!!!
+    int counter=0;
+    for (Agent* curr : agents) {
+        if(curr->isVirus())
+        {
+            Virus* vir = (Virus*)(curr);
+            int nodenum = vir->getNode();
+            if (nodenum==nodeInd) {
+                agents.erase(agents.begin()+counter);
+                delete vir;//TODO need to check if memory is released
+            }
+        }
+
+        counter++;
     }
+
 }
-//TBD!!!
+
 
 

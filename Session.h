@@ -33,7 +33,7 @@ public:
     void decreaseViruses();
     void increaseViruses();
 
-    void eraseAgent(int);
+    void deactivateVirus(int nodeInd);
 
 private:
     Graph g;

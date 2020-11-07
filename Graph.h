@@ -20,10 +20,11 @@ public:
     vector<int> neighborsOf(int vertexA);
     bool isDead(int nodeInd);
     void moveToDead(int nodeInd);
+
 private:
     std::vector<std::vector<int>> edges;
-    queue<int> infected;
-    vector<int> dead;
+    queue<int> infectedQ;
+    vector<int> infectedNodes;
 
 
 };
