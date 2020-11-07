@@ -52,7 +52,9 @@ Session::Session(const std::string &path):g() {
 void Session::simulate() {
     while (numOfViruses!=0){
     // creating turns in each cycle
-    for (int i = 0; i < agents.size() ; ++i) {
+    for (int i = 0; i < agents.size()&&numOfViruses>0 ; ++i) { //TODO we need a function which checks for every connected component of the graph
+        //TODO , if the whole component is sick or cured
+
         // turns is only with ints, any int which is a number means its a virus, if its -1 its contact tracer
         if (agents[i]) {}
     }
@@ -113,6 +115,10 @@ void Session::deactivateVirus(int nodeInd) {//TBD!!!
 
         counter++;
     }
+
+}
+
+bool Session::winCondition() {
 
 }
 

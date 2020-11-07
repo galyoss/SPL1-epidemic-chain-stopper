@@ -32,6 +32,7 @@ public:
     TreeType getTreeType() const;
     void decreaseViruses();
     void increaseViruses();
+    bool winCondition();
 
     void deactivateVirus(int nodeInd);
 

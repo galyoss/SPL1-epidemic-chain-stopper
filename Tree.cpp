@@ -4,7 +4,6 @@
 
 #include "Tree.h"
 #include <vector>
-#include <queue>
 #include "Session.h"
 using namespace std;
 
@@ -14,10 +13,10 @@ using namespace std;
 Tree::Tree(int rootLabel): node(rootLabel){}
 //destructor
 Tree::~Tree(){
-    for (int i = 0; i <children.size() ; ++i) {
+    for (int i = 0; i <children.size() ; ++i)
         delete children[i];
-    }
-};
+
+}
 
 //=========Root tree constructors=========
 
@@ -30,7 +29,15 @@ RootTree::RootTree(int rootLabel) : Tree(rootLabel) {
 
 }
 
-RootTree::RootTree(const RootTree &other) : Tree(other){}; //TODO: verify make it work
+RootTree::RootTree(int rootLabel, const RootTree &other) : Tree(rootLabel) {}
+
+int RootTree::getNode() {
+    return Tree::getNode();
+}
+
+int RootTree::traceTree() {
+    return this->getNode();
+} //TODO: verify make it work
 
 //=========MaxRankTree constructors========
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
@@ -41,57 +48,90 @@ MaxRankTree::MaxRankTree(const MaxRankTree &other):Tree(other) { //TODO: make it
 
 }
 
-MaxRankTree *MaxRankTree::clone() const {
+ MaxRankTree *MaxRankTree::clone() const {
     return new MaxRankTree(*this);
 }
 
+int MaxRankTree::getNode() {
+    return Tree::getNode();
+}
 
-//Tree * Tree::createTree(const Session &session, int rootLabel) {
-///*
-//
-//Tree *Tree::createTree(const Session &session, int rootLabel) {
-//    /* returns vector visited, each vertex's distance from the origin is its value
-///i.e. :
-//                         4
-//                      /      \
-//                    2          1
-//                /                           3
-//            0
-//running the the BFS from 5 will give the following vector: <2,1,2,0,-1>
-// 0 means unreachable from this node, -1 is the source, all other numbers are distance from origin
-//    */
-//Graph g = session.getGraph();
-//
-//vector<int> visited(g.getSize(),0);
-//queue<int> Q;
-//visited.at(rootLabel)=-1;
-//// visited source
-//Q.push(rootLabel);
-//visited[rootLabel]=true;
-//int distance = 1;
-//while (!Q.empty()){
-//int curr = Q.front();
-//Q.pop();
-//vector<int> neighbors = g.neighborsOf(curr);
-//for (int i = 0; i < neighbors.size(); ++i) {
-//if (visited.at(neighbors.at(i))==0)
-//Q.push(neighbors.at(i));
-//visited.at(neighbors.at(i))=distance;
-//}
-//distance++;
-//}
-//}
+int MaxRankTree::traceTree() {
+    vector<vector<int>> treeInfo = this->scanTree();
+
+    //find max
+    int maxval=-1;
+    for (int i=0;i<treeInfo.size();i++){ //finding max num of children
+        if (treeInfo[i][1]>maxval)
+            maxval=treeInfo[i][1];}
+    vector<int> candidates;
+    for (int i=0;i<treeInfo.size();i++){ //inserting all nodes with max value
+        if (treeInfo[i][1]==maxval)
+            candidates.push_back(i);}
+    if(candidates.size()==1) //if done, return
+        return candidates[0];
+
+    int minDeg= 10000;
+    for (int i: candidates) //looking for minimal depth
+    {
+        if (treeInfo[i][2]<minDeg)
+            minDeg=treeInfo[i][2];
+    }
+    for (int i=0;i<candidates.size();i++) //kicking all nodes deeper than minimal
+    {
+        if (treeInfo[i][2]>minDeg)
+            candidates.erase(candidates.begin()+i);
+    }
+    if(candidates.size()==1) //if done, return
+        return candidates[0];
+
+    int minIndex = 10000;
+    for (int i: candidates) //looking for minimal index
+    {
+        if (treeInfo[i][0] < minIndex)
+            minIndex = treeInfo[i][0];
+    }
+    return minIndex;
+}
+
+vector<vector<int>> MaxRankTree::scanTree() {
+    vector<vector<int>> output;
+    vector<MaxRankTree*> queue;
+    queue.push_back(this);
+    MaxRankTree* flag = new MaxRankTree(-1);
+    queue.push_back(flag);
+    int depth_counter=0;
+    while (!queue.empty()) {
+        MaxRankTree *curr = queue.front();
+        if (curr->getNode()==-1) {
+            queue.push_back(flag);
+            depth_counter++;
+        }
+       else {
+            int sons = curr->getChildrenNum();
+            int index = curr->getNode();
+            vector<int> stats = {index,sons,depth_counter};
+            output.push_back(stats);
+        }
+        queue.erase(queue.begin());
+    }
+    delete flag;
+    return output;
+}
 
 
+int MaxRankTree::getChildrenNum() {
+    return this->children.size();
+}
 
 
-
-
-void Tree::addChild(const Tree &child) {
-    children.push_back(child.clone());
+void Tree::addChild(const Tree& child) {
+    Tree* newSon = child.clone(); // cloning the given tree
+    children.push_back(newSon); // pushing the clone into the vector
 }
 
 Tree *Tree::createTree(const Session &session, int rootLabel) {
+    Tree* tr;
     if (session.getTreeType() == Cycle)
     {
         CycleTree* tr = new CycleTree(rootLabel, session.getCycleNum());
@@ -107,29 +147,37 @@ Tree *Tree::createTree(const Session &session, int rootLabel) {
         MaxRankTree* tr = new MaxRankTree(rootLabel);
 
     }
+    return tr;
 }
 
-void Tree::runBFS(Tree &tr, int root, Session& session) {
+void Tree::runBFS(Tree &tr, Session& session) {
     vector<bool> visited(session.getGraph().getSize(), false);
-    queue<int> queue;
-    queue.push(root);
-    visited.at(root)= true;
+    vector<Tree*> queue;
+    queue.push_back(&tr);
+    visited.at(tr.getNode())= true;
 
-    Tree &curr = tr;
+
     while (!queue.empty())
     {
-        int node = queue.front();
-        queue.pop();
-        for (int neighbor : session.getGraph().neighborsOf(node))
+        Tree* curr = queue.front();
+        queue.erase(queue.begin());
+        for (int neighbor : session.getGraph().neighborsOf(curr->getNode()))
         {
             if (!visited.at(neighbor)) {
-                curr.addChild(*createTree(session, neighbor));
+               Tree* son= createTree(session, neighbor);
+               queue.push_back(son);
+               curr->addChild(*son);
+               visited[neighbor]= true;
             }
         }
 
     }
 
+return;
+}
 
+int Tree::getNode() {
+    return node;
 }
 
 
@@ -149,6 +197,20 @@ CycleTree::CycleTree(const CycleTree &other):Tree(other) { //copy constructor //
 
 CycleTree *CycleTree::clone() const {
     return new CycleTree(*this);
+}
+
+int CycleTree::getNode() {
+    return Tree::getNode();
+}
+
+int CycleTree::traceTree() {
+    int cycle = this->currCycle;
+    CycleTree* curr = this;
+    while(cycle>0&&curr->children.size()!=0){
+        curr = (CycleTree*)curr->children.at(0);
+        cycle--;
+    }
+   return curr->getNode();
 }
 
 

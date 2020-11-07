@@ -19,6 +19,8 @@ public:
     void removeEdge(int vertexA, int vertexB);
     vector<int> neighborsOf(int vertexA) const;
     int getSickNode();
+    void isolateNode(int node);
+
 
 private:
     std::vector<std::vector<int>> edges;

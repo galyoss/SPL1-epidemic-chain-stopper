@@ -65,3 +65,11 @@ int Graph::getSickNode()  {
 
     return -1;
 }
+
+void Graph::isolateNode(int node) {
+    for (int i = 0; i < edges.size(); ++i)
+        removeEdge(node,i);
+
+
+
+}

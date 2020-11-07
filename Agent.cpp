@@ -4,6 +4,7 @@
 
 #include "Agent.h"
 #include "iostream"
+using namespace std;
 
 
 Agent::Agent() {}
@@ -38,25 +39,11 @@ void ContactTracer::act(Session &session) {
     if (sick != -1) //Contact tracer has a node to isolate
     {
 
-        if (session.getTreeType() == Cycle)
-        {
-           CycleTree* tr = new CycleTree(sick, session.getCycleNum());
-           tr->createTree(session,sick);
-           int iso = tr->traceTree();
-        }
-        else if (session.getTreeType() == MaxRank)
-        {
-            MaxRankTree* tr = new MaxRankTree(sick);
-            tr->createTree(session,sick);
-            int iso = tr->traceTree();
-        }
-        else //ROOT TREE
-        {
-            MaxRankTree* tr = new MaxRankTree(sick);
-            tr->createTree(session,sick);
-            int iso = tr->traceTree();
-        }
-
+       Tree* tr = Tree::createTree(session,sick);
+       Tree::runBFS(*tr,session);
+       int isolate = tr->traceTree();
+       session.getGraph().isolateNode(isolate);
+        delete tr;
     }
 
 }
@@ -80,8 +67,8 @@ Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) ,VIRUS(vir.isVirus()){
 }
 //destructor
 Virus::~Virus() {
-    delete &nodeInd;
-    delete &VIRUS;
+
+
 }
 
 
