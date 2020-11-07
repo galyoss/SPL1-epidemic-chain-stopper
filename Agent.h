@@ -14,7 +14,7 @@ class Agent{
 public:
     Agent();
     virtual ~Agent()=0;
-    virtual Agent* clone() const = default;
+    virtual Agent* clone() const =0;
     virtual void act(Session& session)=0;
 
     virtual bool isVirus() const =0;

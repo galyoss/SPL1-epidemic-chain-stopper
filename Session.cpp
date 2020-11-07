@@ -41,8 +41,8 @@ Session::Session(const std::string &path):g() {
         }
         else
         {
-            ContactTracer ct();
-            addAgent(ct());
+            ContactTracer ct;
+            addAgent(ct);
         }
     }
 }
@@ -80,7 +80,7 @@ void Session::setGraph(const Graph &graph) {
     g = graph;
 }
 
-Graph Session::getGraph() const {
+ Graph& Session::getGraph()  {
     return g;
 }
 

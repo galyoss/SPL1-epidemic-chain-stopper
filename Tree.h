@@ -13,7 +13,8 @@ public:
     Tree(int rootLabel);
     void addChild(const Tree& child);
     virtual ~Tree();
-
+    virtual Tree* clone() const =0;
+    static void runBFS(Tree &tr, int root, Session& session);
     static Tree* createTree(const Session& session, int rootLabel); //creating runs BFS
     virtual int traceTree()=0;
 
@@ -25,7 +26,9 @@ protected:
 class CycleTree: public Tree{
 public:
     CycleTree(int rootLabel, int currCycle);
+    CycleTree(const CycleTree& other);
     ~CycleTree();
+    CycleTree* clone() const;
     virtual int traceTree();//returns next node to act on
 private:
     int currCycle;
@@ -34,13 +37,17 @@ private:
 class MaxRankTree: public Tree{
 public:
     MaxRankTree(int rootLabel);
+    MaxRankTree(const MaxRankTree& other);
+    MaxRankTree* clone() const;
     ~MaxRankTree();
     virtual int traceTree();
 };
 
 class RootTree: public Tree{
 public:
-    RootTree(int rootLabel1, int rootLabel);
+    RootTree(int rootLabel);
+    RootTree(const RootTree& other);
+    RootTree* clone () const;
     ~RootTree();
     virtual int traceTree();
 };

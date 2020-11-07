@@ -34,6 +34,30 @@ ContactTracer *ContactTracer::clone() const {
 }
 
 void ContactTracer::act(Session &session) {
+    int sick = session.getGraph().getSickNode();
+    if (sick != -1) //Contact tracer has a node to isolate
+    {
+
+        if (session.getTreeType() == Cycle)
+        {
+           CycleTree* tr = new CycleTree(sick, session.getCycleNum());
+           tr->createTree(session,sick);
+           int iso = tr->traceTree();
+        }
+        else if (session.getTreeType() == MaxRank)
+        {
+            MaxRankTree* tr = new MaxRankTree(sick);
+            tr->createTree(session,sick);
+            int iso = tr->traceTree();
+        }
+        else //ROOT TREE
+        {
+            MaxRankTree* tr = new MaxRankTree(sick);
+            tr->createTree(session,sick);
+            int iso = tr->traceTree();
+        }
+
+    }
 
 }
 
@@ -84,7 +108,6 @@ void Virus::act(Session &session) {
     }
     if (!didInfect) //we didnt infect anyone, and we are red already
         session.deactivateVirus(nodeInd);
-
     }
 
 

@@ -4,6 +4,8 @@
 
 #include "Graph.h"
 #include <iostream>
+#include <queue>
+#include <vector>
 
 void Graph::removeEdge(int vertexA, int vertexB) {
     edges [vertexA][vertexB]=0;
@@ -11,7 +13,7 @@ void Graph::removeEdge(int vertexA, int vertexB) {
 
 }
 // going over neighbors and returning vector with their number
-vector<int> Graph::neighborsOf(int vertexA) {
+vector<int> Graph::neighborsOf(int vertexA) const {
     vector<int> ans;
     for (int i = 0; i < edges.size(); ++i) {
         if (edges[vertexA][i]==1)
@@ -37,27 +39,29 @@ int Graph::getSize() const {
     return edges.size();
 }
 
-bool Graph::isDead(int nodeInd) {
-    for (int i = 0; i <dead.size() ; ++i)
-        if (dead[i]==nodeInd)
-            return true;
 
-    return false;
-}
 
-void Graph::moveToDead(int nodeInd) {
-    dead.push_back(nodeInd);
 
-}
-
-bool Graph::isInfected(int nodeInd) {
+bool Graph::isInfected(int nodeInd) const {
     for (int i = 0; i < infectedNodes.size(); ++i)
         if (infectedNodes[i]==nodeInd)
             return true;
     return false;
 }
 
-void Graph::infectNode(int nodeInd) {
+void Graph::infectNode(int nodeInd)  {
+
     infectedNodes.push_back(nodeInd);
     infectedQ.push(nodeInd);
+
+}
+
+int Graph::getSickNode()  {
+    if (!infectedQ.empty()){
+        int ans = infectedQ.front();
+        infectedQ.pop();
+        return ans;
+    }
+
+    return -1;
 }
