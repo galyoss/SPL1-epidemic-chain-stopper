@@ -40,10 +40,10 @@ class MaxRankTree: public Tree{
 public:
     MaxRankTree(int rootLabel);
     MaxRankTree(const MaxRankTree& other);
-     MaxRankTree* clone() const;
-     int getChildrenNum();
-     vector<vector<int>> scanTree();
-   virtual ~MaxRankTree();
+    MaxRankTree* clone() const;
+    int getChildrenNum();
+    vector<vector<int>> * scanTree();
+    virtual ~MaxRankTree();
     virtual int traceTree();
     virtual int getNode();
 

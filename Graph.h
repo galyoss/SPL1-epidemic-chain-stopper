@@ -20,6 +20,7 @@ public:
     vector<int> neighborsOf(int vertexA) const;
     int getSickNode();
     void isolateNode(int node);
+    queue<int>& getInfQ();
 
 
 private:

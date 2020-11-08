@@ -33,7 +33,7 @@ Session::Session(const std::string &path):g() {
         treeType = Root;
     for (auto ag : j["agent"])
     {
-        if (ag[0]="V")
+        if ((ag[0]="V"))
         {
             Virus vr(ag[1]);
             addAgent(vr);
@@ -75,7 +75,9 @@ void Session::simulate() {
             }
     }
 }
-void Session::enqueueInfected(int a) {} //TBD!!!
+void Session::enqueueInfected(int a) {
+    g.infectNode(a);
+} //TBD!!!
 
 
 void Session::setGraph(const Graph &graph) {
@@ -90,37 +92,51 @@ void Session::addAgent(const Agent &agent) {
     agents.push_back(agent.clone());
 }
 
-int Session::dequeueInfected() {}
-
-void Session::decreaseViruses(){
-    numOfViruses--;
+int Session::dequeueInfected() {
+    if (!g.getInfQ().empty()) {
+        int ans = g.getInfQ().front();
+        g.getInfQ().pop();
+        return ans;
+    }
 }
 
-void Session::increaseViruses() {
-    numOfViruses++;
-}
-
-void Session::deactivateVirus(int nodeInd) {//TBD!!!
-    int counter=0;
-    for (Agent* curr : agents) {
-        if(curr->isVirus())
-        {
-            Virus* vir = (Virus*)(curr);
-            int nodenum = vir->getNode();
-            if (nodenum==nodeInd) {
-                agents.erase(agents.begin()+counter);
-                delete vir;//TODO need to check if memory is released
-            }
-        }
-
-        counter++;
+    void Session::decreaseViruses() {
+        numOfViruses--;
     }
 
+    void Session::increaseViruses() {
+        numOfViruses++;
+    }
+
+    void Session::deactivateVirus(int nodeInd) {//TBD!!!
+        int counter = 0;
+        for (Agent *curr : agents) {
+            if (curr->isVirus()) {
+                Virus *vir = (Virus *) (curr);
+                int nodenum = vir->getNode();
+                if (nodenum == nodeInd) {
+                    agents.erase(agents.begin() + counter);
+                    delete vir;//TODO need to check if memory is released
+                }
+            }
+
+            counter++;
+        }
+
+    }
+
+    bool Session::winCondition() {
+
+    }
+
+    Session::~Session()  {
+        for (auto ag:agents)
+            delete ag;
+
+    }
+
+TreeType Session::getTreeType() const {
+    return treeType;
 }
-
-bool Session::winCondition() {
-
-}
-
 
 

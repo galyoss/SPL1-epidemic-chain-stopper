@@ -57,16 +57,16 @@ int MaxRankTree::getNode() {
 }
 
 int MaxRankTree::traceTree() {
-    vector<vector<int>> treeInfo = this->scanTree();
+    vector<vector<int>> *treeInfo = this->scanTree(); //scanTree performs new, need to delete end of function
 
     //find max
     int maxval=-1;
-    for (int i=0;i<treeInfo.size();i++){ //finding max num of children
-        if (treeInfo[i][1]>maxval)
-            maxval=treeInfo[i][1];}
+    for (int i=0;i<treeInfo->size();i++){ //finding max num of children
+        if ((*treeInfo)[i][1]>maxval)
+            maxval=(*treeInfo)[i][1];}
     vector<int> candidates;
-    for (int i=0;i<treeInfo.size();i++){ //inserting all nodes with max value
-        if (treeInfo[i][1]==maxval)
+    for (int i=0;i<treeInfo->size();i++){ //inserting all nodes with max value
+        if ((*treeInfo)[i][1]==maxval)
             candidates.push_back(i);}
     if(candidates.size()==1) //if done, return
         return candidates[0];
@@ -74,12 +74,12 @@ int MaxRankTree::traceTree() {
     int minDeg= 10000;
     for (int i: candidates) //looking for minimal depth
     {
-        if (treeInfo[i][2]<minDeg)
-            minDeg=treeInfo[i][2];
+        if ((*treeInfo)[i][2]<minDeg)
+            minDeg=(*treeInfo)[i][2];
     }
     for (int i=0;i<candidates.size();i++) //kicking all nodes deeper than minimal
     {
-        if (treeInfo[i][2]>minDeg)
+        if ((*treeInfo)[i][2]>minDeg)
             candidates.erase(candidates.begin()+i);
     }
     if(candidates.size()==1) //if done, return
@@ -88,14 +88,15 @@ int MaxRankTree::traceTree() {
     int minIndex = 10000;
     for (int i: candidates) //looking for minimal index
     {
-        if (treeInfo[i][0] < minIndex)
-            minIndex = treeInfo[i][0];
+        if ((*treeInfo)[i][0] < minIndex)
+            minIndex = (*treeInfo)[i][0];
     }
+    delete treeInfo;//freeing memory
     return minIndex;
 }
 
-vector<vector<int>> MaxRankTree::scanTree() {
-    vector<vector<int>> output;
+vector<vector<int>>* MaxRankTree::scanTree() {
+    vector<vector<int>> *output = new vector<vector<int>>; //output must survive the scope, thus new
     vector<MaxRankTree*> queue;
     queue.push_back(this);
     MaxRankTree* flag = new MaxRankTree(-1);
@@ -103,15 +104,18 @@ vector<vector<int>> MaxRankTree::scanTree() {
     int depth_counter=0;
     while (!queue.empty()) {
         MaxRankTree *curr = queue.front();
-        if (curr->getNode()==-1) {
+        if (curr->getNode()==-1) { //we got to the flag, thus we need to push it again and increase depth
             queue.push_back(flag);
             depth_counter++;
         }
-       else {
+       else { //creating the info array, and pushing it into the output vector
             int sons = curr->getChildrenNum();
             int index = curr->getNode();
-            vector<int> stats = {index,sons,depth_counter};
-            output.push_back(stats);
+            vector<int> *stats = new vector<int>(3) ; //need a vector which will survive this scope
+            stats->push_back(index);
+            stats->push_back(sons);
+            stats->push_back(depth_counter);
+            output->push_back(*stats);
         }
         queue.erase(queue.begin());
     }
@@ -168,6 +172,7 @@ void Tree::runBFS(Tree &tr, Session& session) {
                queue.push_back(son);
                curr->addChild(*son);
                visited[neighbor]= true;
+
             }
         }
 
@@ -189,7 +194,9 @@ int Tree::getNode() {
 
     }
 
-    CycleTree::~CycleTree()    {}
+    CycleTree::~CycleTree()    {
+
+}
 
 CycleTree::CycleTree(const CycleTree &other):Tree(other) { //copy constructor //TODO: make it work, how to deep copy?
 

@@ -56,12 +56,8 @@ void Graph::infectNode(int nodeInd)  {
 
 }
 
-int Graph::getSickNode()  {
-    if (!infectedQ.empty()){
-        int ans = infectedQ.front();
-        infectedQ.pop();
-        return ans;
-    }
+int Graph::getSickNode() {
+
 
     return -1;
 }
@@ -72,4 +68,8 @@ void Graph::isolateNode(int node) {
 
 
 
+}
+
+queue<int> &Graph::getInfQ() {
+    return infectedQ;
 }
