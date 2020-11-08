@@ -9,6 +9,10 @@ using namespace std;
 
 Agent::Agent() {}
 
+Agent::~Agent() {
+
+}
+
 
 
 //============RULE OF 5============
@@ -26,7 +30,7 @@ ContactTracer::ContactTracer(const ContactTracer &other):VIRUS(other.isVirus()) 
 
 //Destruct
 ContactTracer::~ContactTracer() {
-    delete &VIRUS;
+
 }
 
 

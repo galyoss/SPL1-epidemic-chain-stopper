@@ -31,20 +31,25 @@ Session::Session(const std::string &path):g() {
         treeType = Cycle;
     if (ttype == "R")
         treeType = Root;
-    for (auto ag : j["agent"])
+    json age = j["agents"];
+    //std::cout << age << std::endl;
+    for (int i=0;i<age.size();i++)
+    if (((std::string)age[i][0]=="V"))
     {
-        if ((ag[0]="V"))
-        {
-            Virus vr(ag[1]);
-            addAgent(vr);
-            numOfViruses++;
-        }
-        else
-        {
-            ContactTracer ct;
-            addAgent(ct);
-        }
+        Virus vr(age[i][1]);
+        addAgent(vr);
+        numOfViruses++;
     }
+    else
+    {
+        ContactTracer ct;
+        addAgent(ct);
+    }
+
+
+    std::cout << agents.size() << std::endl;
+    std::cout << treeType << std::endl;
+    std::cout << g.getSize() << std::endl;
 }
 
 // running the whole thing (functions and workflow)
@@ -58,10 +63,7 @@ void Session::simulate() {
         // turns is only with ints, any int which is a number means its a virus, if its -1 its contact tracer
         if (agents[i]) {}
     }
-
-
         //(-1 for CT, or other non negative int based of the virus's location));
-
 
             int current = turns.front();
             turns.pop();
@@ -132,11 +134,16 @@ int Session::dequeueInfected() {
     Session::~Session()  {
         for (auto ag:agents)
             delete ag;
+        delete &turns;
 
     }
 
 TreeType Session::getTreeType() const {
     return treeType;
+}
+
+int Session::getCycleNum() const {
+    return cycleNum;
 }
 
 

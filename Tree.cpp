@@ -37,7 +37,12 @@ int RootTree::getNode() {
 
 int RootTree::traceTree() {
     return this->getNode();
-} //TODO: verify make it work
+}
+
+RootTree *RootTree::clone() const {
+    return nullptr;
+}
+//TODO: verify make it work
 
 //=========MaxRankTree constructors========
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
