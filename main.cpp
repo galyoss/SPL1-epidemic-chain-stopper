@@ -4,7 +4,7 @@
 using  namespace std;
 int main() {
 //    std::cout << "working on dev1" << std::endl;
-//    Session *sesh = new Session("../config1.json");
+    Session sesh("../config1.json");
 //    sesh->simulate();
 
     return 0;

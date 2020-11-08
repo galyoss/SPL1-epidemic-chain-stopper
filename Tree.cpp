@@ -13,24 +13,36 @@ using namespace std;
 //=======Tree constructor=======
 Tree::Tree(int rootLabel): node(rootLabel){}
 //destructor
-Tree::~Tree(){
-    for (int i = 0; i <children.size() ; ++i) {
-        delete children[i];
-    }
-};
+
+
+Tree::~Tree() {
+    delete &children;
+}
 
 //=========Root tree constructors=========
 
 
 
-//destructor
-RootTree::~RootTree(){}
+
 
 RootTree::RootTree(int rootLabel) : Tree(rootLabel) {
 
 }
 
 RootTree::RootTree(const RootTree &other) : Tree(other){}; //TODO: verify make it work
+
+//destructor
+RootTree::~RootTree(){
+
+}
+
+RootTree *RootTree::clone() const {
+    return nullptr;
+}
+
+int RootTree::traceTree() {
+    return 0;
+}
 
 //=========MaxRankTree constructors========
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
@@ -43,6 +55,10 @@ MaxRankTree::MaxRankTree(const MaxRankTree &other):Tree(other) { //TODO: make it
 
 MaxRankTree *MaxRankTree::clone() const {
     return new MaxRankTree(*this);
+}
+
+int MaxRankTree::traceTree() {
+    return 0;
 }
 
 
@@ -133,6 +149,7 @@ void Tree::runBFS(Tree &tr, int root, Session& session) {
 }
 
 
+
 //==========CycleTree constructors=========
 
 
@@ -149,6 +166,10 @@ CycleTree::CycleTree(const CycleTree &other):Tree(other) { //copy constructor //
 
 CycleTree *CycleTree::clone() const {
     return new CycleTree(*this);
+}
+
+int CycleTree::traceTree() {
+    return 0;
 }
 
 

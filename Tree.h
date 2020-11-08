@@ -12,7 +12,7 @@ class Tree{
 public:
     Tree(int rootLabel);
     void addChild(const Tree& child);
-    virtual ~Tree();
+    ~Tree();
     virtual Tree* clone() const =0;
     static void runBFS(Tree &tr, int root, Session& session);
     static Tree* createTree(const Session& session, int rootLabel); //creating runs BFS
@@ -24,6 +24,7 @@ protected:
 };
 
 class CycleTree: public Tree{
+    using Tree::Tree;
 public:
     CycleTree(int rootLabel, int currCycle);
     CycleTree(const CycleTree& other);
@@ -44,6 +45,7 @@ public:
 };
 
 class RootTree: public Tree{
+    using Tree::Tree;
 public:
     RootTree(int rootLabel);
     RootTree(const RootTree& other);

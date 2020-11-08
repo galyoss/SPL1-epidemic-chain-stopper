@@ -13,7 +13,7 @@
 class Agent{
 public:
     Agent();
-    virtual ~Agent()=0;
+    virtual ~Agent() =default;
     virtual Agent* clone() const =0;
     virtual void act(Session& session)=0;
 
