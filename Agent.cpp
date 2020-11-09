@@ -85,8 +85,9 @@ bool Virus::isVirus() const {
 
 void Virus::act(Session &session) {
     vector<int> neighbors = session.getGraph().neighborsOf(nodeInd); //saving neighbors in vector
-    if(!session.getGraph().isInfected(nodeInd))     //if this node is not infectedQ yet, infect it
-          session.getGraph().infectNode(nodeInd);
+    if(!session.getGraph().isInfected(nodeInd)) {  //if this node is not infectedQ yet, infect it
+        session.getGraph().infectNode(nodeInd);
+    }
 
     sort(neighbors.begin(),neighbors.end()); //sorting neighbors by size
     bool didInfect = false;
@@ -94,6 +95,8 @@ void Virus::act(Session &session) {
         if (!session.getGraph().isInfected(neighbors[i])) {
             Virus vir(neighbors[i]);
             session.addAgent(vir);
+            session.getGraph().getInfQ().push(neighbors[i]);
+            session.getGraph().infectNode(neighbors[i]);
 
 
             didInfect=true;

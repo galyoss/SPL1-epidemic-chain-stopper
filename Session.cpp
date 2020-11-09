@@ -38,6 +38,7 @@ Session::Session(const std::string &path):g(), cycleNum(0) {
     if (((std::string)age[i][0]=="V"))
     {
         Virus vr(age[i][1]);
+        enqueueInfected(age[i][1]);
         addAgent(vr);
      }
     else
@@ -67,12 +68,8 @@ void Session::simulate() {
 
         sick_num_after=g.getInfectedNum();
     }
-    //last round for viruses
-    for (int i=0;i<agents.size();i++)
-    {
-        if (agents.at(i)->isVirus())
-            agents.at(i)->act(*this);
-    }
+
+
     std::cout << "finished game" << std::endl;
     //TODO: session finished, build output json here
 }
@@ -92,7 +89,7 @@ void Session::setGraph(const Graph &graph) {
 void Session::addAgent(const Agent &agent) {
     Agent* age = agent.clone();
     agents.push_back(age);
-    if (age->getNode()!=-1)
+    if (age->getNode()!=-1 && !g.isInfected(age->getNode()))
         enqueueInfected(age->getNode());
 
 }

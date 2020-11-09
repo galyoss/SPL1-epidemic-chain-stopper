@@ -52,7 +52,8 @@ bool Graph::isInfected(int nodeInd) const {
 void Graph::infectNode(int nodeInd)  {
 
     infectedNodes.push_back(nodeInd);
-    infectedQ.push(nodeInd);
+//    infectedQ.push(nodeInd);
+
 
 }
 
