@@ -56,20 +56,17 @@ void Graph::infectNode(int nodeInd)  {
 
 }
 
-int Graph::getSickNode() {
-
-
-    return -1;
-}
 
 void Graph::isolateNode(int node) {
     for (int i = 0; i < edges.size(); ++i)
         removeEdge(node,i);
 
-
-
 }
 
 queue<int> &Graph::getInfQ() {
     return infectedQ;
+}
+
+int Graph::getInfectedNum() const {
+    return infectedNodes.size();
 }

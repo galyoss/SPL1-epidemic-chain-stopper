@@ -10,6 +10,7 @@
 #include <sstream>
 #include "vector"
 #include "Graph.h"
+#include "queue"
 
 
 using namespace std;
@@ -19,7 +20,7 @@ using json=nlohmann::json;
 
 
 
-Session::Session(const std::string &path):g() {
+Session::Session(const std::string &path):g(), cycleNum(0) {
     std::ifstream f(path);
     json j = json::parse(f);
     vector<vector<int>> matrix = j["graph"];
@@ -32,54 +33,52 @@ Session::Session(const std::string &path):g() {
     if (ttype == "R")
         treeType = Root;
     json age = j["agents"];
-    //std::cout << age << std::endl;
+
     for (int i=0;i<age.size();i++)
     if (((std::string)age[i][0]=="V"))
     {
         Virus vr(age[i][1]);
         addAgent(vr);
-        numOfViruses++;
-    }
+     }
     else
     {
         ContactTracer ct;
         addAgent(ct);
     }
 
-
     std::cout << agents.size() << std::endl;
     std::cout << treeType << std::endl;
     std::cout << g.getSize() << std::endl;
+
 }
 
 // running the whole thing (functions and workflow)
 
 void Session::simulate() {
-    while (numOfViruses!=0){
-    // creating turns in each cycle
-    for (int i = 0; i < agents.size()&&numOfViruses>0 ; ++i) { //TODO we need a function which checks for every connected component of the graph
-        //TODO , if the whole component is sick or cured
+    int sick_num_before = g.getInfectedNum();
+    int sick_num_after = 0;
 
-        // turns is only with ints, any int which is a number means its a virus, if its -1 its contact tracer
-        if (agents[i]) {}
-    }
-        //(-1 for CT, or other non negative int based of the virus's location));
+    while (sick_num_before!=sick_num_after){
+        cycleNum++;
+        sick_num_before=g.getInfectedNum();
+        int agents_num=agents.size();
+        for (int i=0;i<agents_num;i++)
+            agents.at(i)->act(*this);
 
-            int current = turns.front();
-            turns.pop();
-            if (current==-1) {
-                ContactTracer ct;
-                ct.act(*this);
-            }
-            else{
-                Virus vir(current);
-                vir.act(*this);
-            }
+        sick_num_after=g.getInfectedNum();
     }
+    //last round for viruses
+    for (int i=0;i<agents.size();i++)
+    {
+        if (agents.at(i)->isVirus())
+            agents.at(i)->act(*this);
+    }
+    std::cout << "finished game" << std::endl;
+    //TODO: session finished, build output json here
 }
 void Session::enqueueInfected(int a) {
     g.infectNode(a);
-} //TBD!!!
+}
 
 
 void Session::setGraph(const Graph &graph) {
@@ -91,7 +90,11 @@ void Session::setGraph(const Graph &graph) {
 }
 
 void Session::addAgent(const Agent &agent) {
-    agents.push_back(agent.clone());
+    Agent* age = agent.clone();
+    agents.push_back(age);
+    if (age->getNode()!=-1)
+        enqueueInfected(age->getNode());
+
 }
 
 int Session::dequeueInfected() {
@@ -100,42 +103,13 @@ int Session::dequeueInfected() {
         g.getInfQ().pop();
         return ans;
     }
+    return -1;
 }
 
-    void Session::decreaseViruses() {
-        numOfViruses--;
-    }
 
-    void Session::increaseViruses() {
-        numOfViruses++;
-    }
-
-    void Session::deactivateVirus(int nodeInd) {//TBD!!!
-        int counter = 0;
-        for (Agent *curr : agents) {
-            if (curr->isVirus()) {
-                Virus *vir = (Virus *) (curr);
-                int nodenum = vir->getNode();
-                if (nodenum == nodeInd) {
-                    agents.erase(agents.begin() + counter);
-                    delete vir;//TODO need to check if memory is released
-                }
-            }
-
-            counter++;
-        }
-
-    }
-
-    bool Session::winCondition() {
-
-    }
-
-    Session::~Session()  {
+    Session::~Session()  { //TODO: complete
         for (auto ag:agents)
             delete ag;
-        delete &turns;
-
     }
 
 TreeType Session::getTreeType() const {

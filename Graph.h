@@ -18,9 +18,9 @@ public:
     int getSize() const;
     void removeEdge(int vertexA, int vertexB);
     vector<int> neighborsOf(int vertexA) const;
-    int getSickNode();
     void isolateNode(int node);
     queue<int>& getInfQ();
+    int getInfectedNum() const;
 
 
 private:

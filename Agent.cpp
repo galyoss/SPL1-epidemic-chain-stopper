@@ -39,7 +39,7 @@ ContactTracer *ContactTracer::clone() const {
 }
 
 void ContactTracer::act(Session &session) {
-    int sick = session.getGraph().getSickNode();
+    int sick = session.dequeueInfected();
     if (sick != -1) //Contact tracer has a node to isolate
     {
 
@@ -47,7 +47,7 @@ void ContactTracer::act(Session &session) {
        Tree::runBFS(*tr,session);
        int isolate = tr->traceTree();
        session.getGraph().isolateNode(isolate);
-        delete tr;
+       delete tr;
     }
 
 }
@@ -55,6 +55,10 @@ void ContactTracer::act(Session &session) {
  bool ContactTracer::isVirus() const {
     return VIRUS;
 
+}
+
+int ContactTracer::getNode() const {
+    return -1;
 }
 
 //============================================================================
@@ -72,7 +76,6 @@ Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) ,VIRUS(vir.isVirus()){
 //destructor
 Virus::~Virus() {
 
-
 }
 
 
@@ -85,20 +88,18 @@ void Virus::act(Session &session) {
     if(!session.getGraph().isInfected(nodeInd))     //if this node is not infectedQ yet, infect it
           session.getGraph().infectNode(nodeInd);
 
-
     sort(neighbors.begin(),neighbors.end()); //sorting neighbors by size
     bool didInfect = false;
-    for (int i = 0; i <neighbors.size() ; ++i) { //finding lowest neighbor to infect
+    for (int i = 0; i <neighbors.size() && !didInfect ; ++i) { //finding lowest neighbor to infect
         if (!session.getGraph().isInfected(neighbors[i])) {
-            Virus vir(i);
+            Virus vir(neighbors[i]);
             session.addAgent(vir);
-            session.increaseViruses();
+
+
             didInfect=true;
-            break;
         }
     }
-    if (!didInfect) //we didnt infect anyone, and we are red already
-        session.deactivateVirus(nodeInd);
+
     }
 
 
@@ -107,7 +108,7 @@ Virus *Virus::clone() const {
     return new Virus(*this);
 }
 
-int Virus::getNode() {
+int Virus::getNode() const {
     return nodeInd;
 }
 

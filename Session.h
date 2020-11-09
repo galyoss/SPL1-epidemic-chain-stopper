@@ -8,7 +8,6 @@
 #include "Graph.h"
 #include <iostream>
 #include "Agent.h"
-#include <queue>
 class Agent;
 using namespace std;
 
@@ -31,19 +30,16 @@ public:
     void enqueueInfected(int);
     int dequeueInfected();
     TreeType getTreeType() const;
-    void decreaseViruses();
-    void increaseViruses();
-    bool winCondition();
 
-    void deactivateVirus(int nodeInd);
+
+
 
 private:
     Graph g;
     TreeType treeType;
     vector<Agent*> agents;
     int cycleNum;
-    queue<int> turns;
-    int numOfViruses;
+
 };
 
 #endif //ASSIGNMENT1_SESSION_H

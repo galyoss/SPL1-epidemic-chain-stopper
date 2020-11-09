@@ -10,7 +10,7 @@ using namespace std;
 
 
 //=======Tree constructor=======
-Tree::Tree(int rootLabel): node(rootLabel){}
+Tree::Tree(int rootLabel): node(rootLabel),children(){}
 //destructor
 Tree::~Tree(){
     for (int i = 0; i <children.size() ; ++i)
@@ -62,71 +62,27 @@ int MaxRankTree::getNode() {
 }
 
 int MaxRankTree::traceTree() {
-    vector<vector<int>> *treeInfo = this->scanTree(); //scanTree performs new, need to delete end of function
-
-    //find max
-    int maxval=-1;
-    for (int i=0;i<treeInfo->size();i++){ //finding max num of children
-        if ((*treeInfo)[i][1]>maxval)
-            maxval=(*treeInfo)[i][1];}
-    vector<int> candidates;
-    for (int i=0;i<treeInfo->size();i++){ //inserting all nodes with max value
-        if ((*treeInfo)[i][1]==maxval)
-            candidates.push_back(i);}
-    if(candidates.size()==1) //if done, return
-        return candidates[0];
-
-    int minDeg= 10000;
-    for (int i: candidates) //looking for minimal depth
-    {
-        if ((*treeInfo)[i][2]<minDeg)
-            minDeg=(*treeInfo)[i][2];
-    }
-    for (int i=0;i<candidates.size();i++) //kicking all nodes deeper than minimal
-    {
-        if ((*treeInfo)[i][2]>minDeg)
-            candidates.erase(candidates.begin()+i);
-    }
-    if(candidates.size()==1) //if done, return
-        return candidates[0];
-
-    int minIndex = 10000;
-    for (int i: candidates) //looking for minimal index
-    {
-        if ((*treeInfo)[i][0] < minIndex)
-            minIndex = (*treeInfo)[i][0];
-    }
-    delete treeInfo;//freeing memory
-    return minIndex;
-}
-
-vector<vector<int>>* MaxRankTree::scanTree() {
-    vector<vector<int>> *output = new vector<vector<int>>; //output must survive the scope, thus new
     vector<MaxRankTree*> queue;
     queue.push_back(this);
-    MaxRankTree* flag = new MaxRankTree(-1);
-    queue.push_back(flag);
-    int depth_counter=0;
-    while (!queue.empty()) {
-        MaxRankTree *curr = queue.front();
-        if (curr->getNode()==-1) { //we got to the flag, thus we need to push it again and increase depth
-            queue.push_back(flag);
-            depth_counter++;
-        }
-       else { //creating the info array, and pushing it into the output vector
-            int sons = curr->getChildrenNum();
-            int index = curr->getNode();
-            vector<int> *stats = new vector<int>(3) ; //need a vector which will survive this scope
-            stats->push_back(index);
-            stats->push_back(sons);
-            stats->push_back(depth_counter);
-            output->push_back(*stats);
-        }
+
+    int maxNode = -1;
+    int maxValue = -1;
+
+    while (!queue.empty())
+    {
+        MaxRankTree* curr = queue.front();
         queue.erase(queue.begin());
-    }
-    delete flag;
-    return output;
+        if (curr->getChildrenNum()>maxValue) {
+            maxNode=curr->getNode();
+            maxValue=curr->getChildrenNum();
+        }
+        for (Tree* son : curr->children)
+            queue.push_back((MaxRankTree*)son);
+
+    } //while
+    return maxNode;
 }
+
 
 
 int MaxRankTree::getChildrenNum() {
@@ -140,23 +96,22 @@ void Tree::addChild(const Tree& child) {
 }
 
 Tree *Tree::createTree(const Session &session, int rootLabel) {
-    Tree* tr;
     if (session.getTreeType() == Cycle)
     {
-        CycleTree* tr = new CycleTree(rootLabel, session.getCycleNum());
+        return new CycleTree(rootLabel, session.getCycleNum());
 
     }
     else if (session.getTreeType() == MaxRank)
     {
-        MaxRankTree* tr = new MaxRankTree(rootLabel);
+        return new MaxRankTree(rootLabel);
 
     }
     else //ROOT TREE
     {
-        MaxRankTree* tr = new MaxRankTree(rootLabel);
+        return new MaxRankTree(rootLabel);
 
     }
-    return tr;
+
 }
 
 void Tree::runBFS(Tree &tr, Session& session) {
@@ -174,8 +129,9 @@ void Tree::runBFS(Tree &tr, Session& session) {
         {
             if (!visited.at(neighbor)) {
                Tree* son= createTree(session, neighbor);
-               queue.push_back(son);
+
                curr->addChild(*son);
+                queue.push_back(curr->children.back());
                visited[neighbor]= true;
 
             }
