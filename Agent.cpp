@@ -66,11 +66,11 @@ int ContactTracer::getNode() const {
 //========= RULE OF 5=============
 
 //constructor
-Virus::Virus(int _nodeInd):nodeInd(_nodeInd), VIRUS(true){
+Virus::Virus(int _nodeInd):nodeInd(_nodeInd), VIRUS(true), acted(false){
         //IMPLEMENTED!!!
 }
 //copy constructor
-Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) ,VIRUS(vir.isVirus()){
+Virus::Virus(const Virus& vir):nodeInd(vir.nodeInd) ,VIRUS(vir.isVirus()), acted(vir.acted){
         //IMPLEMENTED!!!
 }
 //destructor
@@ -82,11 +82,15 @@ Virus::~Virus() {
 bool Virus::isVirus() const {
     return VIRUS;
 }
+bool Virus::hasActed() const{
+    return acted;
+}
 
 void Virus::act(Session &session) {
     vector<int> neighbors = session.getGraph().neighborsOf(nodeInd); //saving neighbors in vector
-    if(!session.getGraph().isInfected(nodeInd)) {  //if this node is not infectedQ yet, infect it
-        session.getGraph().infectNode(nodeInd);
+    if(!this->hasActed()) {  //if this node is not infectedQ yet, infect it
+        session.getGraph().getInfQ().push(this->nodeInd);
+        this->acted=true;
     }
 
     sort(neighbors.begin(),neighbors.end()); //sorting neighbors by size
@@ -95,8 +99,7 @@ void Virus::act(Session &session) {
         if (!session.getGraph().isInfected(neighbors[i])) {
             Virus vir(neighbors[i]);
             session.addAgent(vir);
-            session.getGraph().getInfQ().push(neighbors[i]);
-            session.getGraph().infectNode(neighbors[i]);
+
 
 
             didInfect=true;

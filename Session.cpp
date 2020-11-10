@@ -38,7 +38,6 @@ Session::Session(const std::string &path):g(), cycleNum(0) {
     if (((std::string)age[i][0]=="V"))
     {
         Virus vr(age[i][1]);
-        enqueueInfected(age[i][1]);
         addAgent(vr);
      }
     else

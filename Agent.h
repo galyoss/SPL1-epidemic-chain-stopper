@@ -49,9 +49,12 @@ public:
     virtual int getNode() const ;
     bool isVirus() const;
     void act(Session& session);
+    bool hasActed() const;
+
 private:
     const int nodeInd;
     bool VIRUS;
+    bool acted;
 
 };
 
