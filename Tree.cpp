@@ -17,7 +17,16 @@ Tree::~Tree(){
         delete children[i];
 
 }
+//copy constructor
+Tree::Tree(const Tree &other):node(other.node) , children(vector<Tree*>(other.children.size())){
 
+    for (int i=0;i<other.children.size();i++)
+    {
+        children[i] = other.children[i]->clone();
+    }
+
+
+}
 //=========Root tree constructors=========
 
 
@@ -40,7 +49,7 @@ int RootTree::traceTree() {
 }
 
 RootTree *RootTree::clone() const {
-    return nullptr;
+    return new RootTree(*this);
 }
 //TODO: verify make it work
 
@@ -146,12 +155,7 @@ int Tree::getNode() {
     return node;
 }
 
-//copy constructor
-Tree::Tree(const Tree &other):node(other.node) {
-    for(Tree* child: other.children){
-        this->addChild(*child);
-    }
-}
+
 
 
 
