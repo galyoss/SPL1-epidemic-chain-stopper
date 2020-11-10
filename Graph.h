@@ -21,6 +21,8 @@ public:
     void isolateNode(int node);
     queue<int>& getInfQ();
     int getInfectedNum() const;
+    vector<int>& getInfectedNodes();
+    vector<vector<int>>& getEdges();
 
 
 private:

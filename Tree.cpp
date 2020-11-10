@@ -146,6 +146,15 @@ int Tree::getNode() {
     return node;
 }
 
+//copy constructor
+Tree::Tree(const Tree &other):node(other.node) {
+    for(Tree* child: other.children){
+        this->addChild(*child);
+    }
+}
+
+
+
 
 //==========CycleTree constructors=========
 

@@ -13,11 +13,10 @@
 #include "queue"
 
 
+
+
 using namespace std;
 using json=nlohmann::json;
-
-
-
 
 
 Session::Session(const std::string &path):g(), cycleNum(0) {
@@ -46,6 +45,7 @@ Session::Session(const std::string &path):g(), cycleNum(0) {
         addAgent(ct);
     }
 
+
     std::cout << agents.size() << std::endl;
     std::cout << treeType << std::endl;
     std::cout << g.getSize() << std::endl;
@@ -67,6 +67,15 @@ void Session::simulate() {
 
         sick_num_after=g.getInfectedNum();
     }
+
+    json out;
+
+    out["header"] = {"infected", "graph"};
+    out["graph"] = {1,2,3};
+    out["infected"] = g.getInfectedNodes();
+    ofstream i("output.json");
+    std::cout << out << std::endl;
+
 
 
     std::cout << "finished game" << std::endl;

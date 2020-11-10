@@ -30,6 +30,7 @@ Graph::Graph() {
 
 }
 
+
 void Graph::updateGraph(vector <vector<int>> matrix) {
     edges = matrix;
 
@@ -70,4 +71,12 @@ queue<int> &Graph::getInfQ() {
 
 int Graph::getInfectedNum() const {
     return infectedNodes.size();
+}
+
+vector<int> &Graph::getInfectedNodes() {
+    return infectedNodes;
+}
+
+vector<vector<int>> &Graph::getEdges() {
+    return edges;
 }

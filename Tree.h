@@ -10,9 +10,11 @@ using namespace std;
 class Session;
 class Tree{
 public:
-    Tree(int rootLabel);
+    Tree(int rootLabel); //constructor
     void addChild(const Tree& child);
-    virtual ~Tree();
+    virtual ~Tree(); //destractor
+    Tree(const Tree& other); //copy constructor
+    void operator= (Tree&&);
     virtual Tree* clone() const =0;
     static void runBFS(Tree &tr, Session& session);
     static Tree* createTree(const Session& session, int rootLabel); //creating runs BFS
