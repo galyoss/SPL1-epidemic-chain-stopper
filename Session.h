@@ -26,6 +26,7 @@ public:
     void addAgent(const Agent& agent);
     void setGraph(const Graph& graph);
     Graph& getGraph() ;
+    bool checkGraph();
     int getCycleNum() const;
     void enqueueInfected(int);
     int dequeueInfected();

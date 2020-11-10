@@ -58,7 +58,7 @@ void Session::simulate() {
     int sick_num_before = g.getInfectedNum();
     int sick_num_after = 0;
 
-    while (sick_num_before!=sick_num_after){
+    while (checkGraph()){
         cycleNum++;
         sick_num_before=g.getInfectedNum();
         int agents_num=agents.size();
@@ -115,5 +115,36 @@ TreeType Session::getTreeType() const {
 int Session::getCycleNum() const {
     return cycleNum;
 }
+
+bool Session::checkGraph() {
+    vector<bool> visited(g.getSize(), false);
+    for (int i = 0; i <visited.size() ; ++i) {
+        if(!visited[i]){ //not visited in this node
+            vector<int> queue;
+            bool firstStatus = g.isInfected(i);
+            queue.push_back(i);
+
+            while (!queue.empty()){ //starting BFS
+                int curr = queue.front();
+                queue.erase(queue.begin());
+                visited[curr]=true;
+                for (int n: g.neighborsOf(curr)) {
+                    if (!visited[n])
+                    {
+
+                        if (g.isInfected(n) != firstStatus)
+                        return true;
+                   else
+                        queue.push_back(n);}
+
+                }
+                }
+
+            }
+        }
+    return false;
+    }
+
+
 
 
