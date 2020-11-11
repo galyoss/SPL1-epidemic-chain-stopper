@@ -21,7 +21,14 @@ class Session{
 public:
 
     Session(const std::string& path); //constructor
-    ~Session();
+    ~Session(); //destructor
+    Session(const Session& session); //copy constructor
+    Session& operator=(const Session &other); //copy assignment
+    Session(Session&& other); //move constructor
+    Session& operator=(Session&& session); //move assignment operator
+    void steal(Session& session);
+    void copy(const Session& session);
+    void clear();
     void simulate();
     void addAgent(const Agent& agent);
     void setGraph(const Graph& graph);

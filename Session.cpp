@@ -45,14 +45,70 @@ Session::Session(const std::string &path):g(), cycleNum(0) {
         addAgent(ct);
     }
 
+}
 
-    std::cout << agents.size() << std::endl;
-    std::cout << treeType << std::endl;
-    std::cout << g.getSize() << std::endl;
+Session::~Session()  {
+    clear();
+}
+
+//copy constructor
+Session::Session(const Session &session) {
+    copy(session);
+}
+
+
+//move constructor
+Session::Session(Session &&other) {
+    steal(other);
+}
+//move assignment operator
+Session &Session::operator=(Session &&session) {
+    if (this!=&session)
+    {
+        clear();
+        steal(session);
+    }
+    return *this;
+}
+
+//copy assignment
+Session &Session::operator=(const Session &other) {
+    if (this!=&other) {
+        clear();
+        copy(other);
+    }
+    return *this;
+}
+
+void Session::copy(const Session &session) { //deep copy of graph, agents, etc.
+
+    g = session.g; //TODO: make sure graph is deep copied in this way
+    for (Agent* age: session.agents)
+        agents.push_back(age->clone());
+    cycleNum=session.cycleNum;
+    treeType=session.treeType;
 
 }
 
-// running the whole thing (functions and workflow)
+void Session::clear() {
+
+    for (auto ag:agents)
+        if (ag)
+            delete ag;
+
+}
+
+void Session::steal(Session &session) {
+    g = session.g;
+    treeType=session.treeType;
+    cycleNum=session.cycleNum;
+    agents=session.agents;
+    for (Agent* age: session.agents)
+        age= nullptr;
+
+}
+
+
 
 void Session::simulate() {
     int sick_num_before = g.getInfectedNum();
@@ -70,10 +126,10 @@ void Session::simulate() {
 
     json out;
 
-    out["header"] = {"infected", "graph"};
-    out["graph"] = {1,2,3};
+    out["graph"] = g.getEdges();
     out["infected"] = g.getInfectedNodes();
-    ofstream i("output.json");
+    ofstream i("output11_1.json");
+    out >> i;
     std::cout << out << std::endl;
 
 
@@ -112,10 +168,7 @@ int Session::dequeueInfected() {
 }
 
 
-    Session::~Session()  { //TODO: complete
-        for (auto ag:agents)
-            delete ag;
-    }
+
 
 TreeType Session::getTreeType() const {
     return treeType;
@@ -153,6 +206,10 @@ bool Session::checkGraph() {
         }
     return false;
     }
+
+
+
+
 
 
 

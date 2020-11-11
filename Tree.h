@@ -14,7 +14,12 @@ public:
     void addChild(const Tree& child);
     virtual ~Tree(); //destractor
     Tree(const Tree& other); //copy constructor
-    void operator= (Tree&&);
+    Tree& operator=(Tree&& tr);
+    Tree(Tree&& tr);
+    void steal(Tree& tr);
+    void copy(const Tree& other);
+    void clean();
+    Tree& operator= (const Tree& other);
     virtual Tree* clone() const =0;
     static void runBFS(Tree &tr, Session& session);
     static Tree* createTree(const Session& session, int rootLabel); //creating runs BFS

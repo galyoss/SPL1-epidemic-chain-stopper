@@ -13,20 +13,76 @@ using namespace std;
 Tree::Tree(int rootLabel): node(rootLabel),children(){}
 //destructor
 Tree::~Tree(){
-    for (int i = 0; i <children.size() ; ++i)
-        delete children[i];
+    clean();
 
 }
 //copy constructor
 Tree::Tree(const Tree &other):node(other.node) , children(vector<Tree*>(other.children.size())){
 
+    copy(other);
+
+}
+
+//copy assignment operator
+
+Tree& Tree::operator=(const Tree &other) {
+    if (this!=&other)
+    {
+        clean();
+        copy(other);
+    }
+
+    return *this;
+}
+
+//move constructor
+
+Tree::Tree(Tree&& tr):children(vector<Tree*>(tr.children.size())) {
+    steal(tr);
+    }
+
+//move assignment operator
+
+
+Tree &Tree::operator=(Tree &&tr) {
+    if (this!=&tr) {
+        clean();
+        steal(tr);
+    }
+    return *this;
+}
+
+
+//=========helpful methods
+void Tree::steal(Tree &tr) {
+    node=tr.node;
+    for (int i=0;i<tr.children.size();i++)
+    {
+        children[i] = tr.children[i];
+        tr.children[i] = nullptr;
+    }
+}
+
+
+void Tree::clean() {
+
+    node = -1;
+    for (int i = 0; i < children.size() ; ++i)
+        delete children[i];
+
+}
+
+
+
+void Tree::copy(const Tree &other) {
+
+    this->node=other.node;
     for (int i=0;i<other.children.size();i++)
     {
         children[i] = other.children[i]->clone();
     }
-
-
 }
+
 //=========Root tree constructors=========
 
 
@@ -154,6 +210,9 @@ return;
 int Tree::getNode() {
     return node;
 }
+
+
+
 
 
 
