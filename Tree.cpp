@@ -5,19 +5,21 @@
 #include "Tree.h"
 #include <vector>
 #include "Session.h"
+
 using namespace std;
 
 
-
 //=======Tree constructor=======
-Tree::Tree(int rootLabel): node(rootLabel),children(){}
+Tree::Tree(int rootLabel) : node(rootLabel), children() {}
+
 //destructor
-Tree::~Tree(){
+Tree::~Tree() {
     clean();
 
 }
+
 //copy constructor
-Tree::Tree(const Tree &other):node(other.node) , children(vector<Tree*>(other.children.size())){
+Tree::Tree(const Tree &other) : node(other.node), children(vector<Tree *>(other.children.size())) {
 
     copy(other);
 
@@ -25,9 +27,8 @@ Tree::Tree(const Tree &other):node(other.node) , children(vector<Tree*>(other.ch
 
 //copy assignment operator
 
-Tree& Tree::operator=(const Tree &other) {
-    if (this!=&other)
-    {
+Tree &Tree::operator=(const Tree &other) {
+    if (this != &other) {
         clean();
         copy(other);
     }
@@ -37,15 +38,15 @@ Tree& Tree::operator=(const Tree &other) {
 
 //move constructor
 
-Tree::Tree(Tree&& tr):children(vector<Tree*>(tr.children.size())) {
+Tree::Tree(Tree &&tr) : children(vector<Tree *>(tr.children.size())) {
     steal(tr);
-    }
+}
 
 //move assignment operator
 
 
 Tree &Tree::operator=(Tree &&tr) {
-    if (this!=&tr) {
+    if (this != &tr) {
         clean();
         steal(tr);
     }
@@ -55,9 +56,8 @@ Tree &Tree::operator=(Tree &&tr) {
 
 //=========helpful methods
 void Tree::steal(Tree &tr) {
-    node=tr.node;
-    for (int i=0;i<tr.children.size();i++)
-    {
+    node = tr.node;
+    for (int i = 0; i < tr.children.size(); i++) {
         children[i] = tr.children[i];
         tr.children[i] = nullptr;
     }
@@ -66,19 +66,20 @@ void Tree::steal(Tree &tr) {
 
 void Tree::clean() {
 
-    node = -1;
-    for (int i = 0; i < children.size() ; ++i)
-        delete children[i];
-
+    //node = -1;
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i] != nullptr) {
+            delete children[i];
+            children[i] = nullptr;
+        }
+    }
 }
-
 
 
 void Tree::copy(const Tree &other) {
 
-    this->node=other.node;
-    for (int i=0;i<other.children.size();i++)
-    {
+    this->node = other.node;
+    for (int i = 0; i < other.children.size(); i++) {
         children[i] = other.children[i]->clone();
     }
 }
@@ -88,7 +89,7 @@ void Tree::copy(const Tree &other) {
 
 
 //destructor
-RootTree::~RootTree(){}
+RootTree::~RootTree() {}
 
 RootTree::RootTree(int rootLabel) : Tree(rootLabel) {
 
@@ -111,14 +112,15 @@ RootTree *RootTree::clone() const {
 
 //=========MaxRankTree constructors========
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
-//destructor
-MaxRankTree:: ~MaxRankTree() {}
 
-MaxRankTree::MaxRankTree(const MaxRankTree &other):Tree(other) { //TODO: make it work in office hours
+//destructor
+MaxRankTree::~MaxRankTree() {}
+
+MaxRankTree::MaxRankTree(const MaxRankTree &other) : Tree(other) { //TODO: make it work in office hours
 
 }
 
- MaxRankTree *MaxRankTree::clone() const {
+MaxRankTree *MaxRankTree::clone() const {
     return new MaxRankTree(*this);
 }
 
@@ -127,27 +129,25 @@ int MaxRankTree::getNode() {
 }
 
 int MaxRankTree::traceTree() {
-    vector<MaxRankTree*> queue;
+    vector<MaxRankTree *> queue;
     queue.push_back(this);
 
     int maxNode = -1;
     int maxValue = -1;
 
-    while (!queue.empty())
-    {
-        MaxRankTree* curr = queue.front();
+    while (!queue.empty()) {
+        MaxRankTree *curr = queue.front();
         queue.erase(queue.begin());
-        if (curr->getChildrenNum()>maxValue) {
-            maxNode=curr->getNode();
-            maxValue=curr->getChildrenNum();
+        if (curr->getChildrenNum() > maxValue) {
+            maxNode = curr->getNode();
+            maxValue = curr->getChildrenNum();
         }
-        for (Tree* son : curr->children)
-            queue.push_back((MaxRankTree*)son);
+        for (Tree *son : curr->children)
+            queue.push_back((MaxRankTree *) son);
 
     } //while
     return maxNode;
 }
-
 
 
 int MaxRankTree::getChildrenNum() {
@@ -155,56 +155,50 @@ int MaxRankTree::getChildrenNum() {
 }
 
 
-void Tree::addChild(const Tree& child) {
-    Tree* newSon = child.clone(); // cloning the given tree
+void Tree::addChild(const Tree &child) {
+    Tree *newSon = child.clone(); // cloning the given tree
     children.push_back(newSon); // pushing the clone into the vector
 }
 
 Tree *Tree::createTree(const Session &session, int rootLabel) {
-    if (session.getTreeType() == Cycle)
-    {
+    if (session.getTreeType() == Cycle) {
         return new CycleTree(rootLabel, session.getCycleNum());
 
-    }
-    else if (session.getTreeType() == MaxRank)
-    {
+    } else if (session.getTreeType() == MaxRank) {
         return new MaxRankTree(rootLabel);
 
-    }
-    else //ROOT TREE
+    } else //ROOT TREE
     {
-        return new MaxRankTree(rootLabel);
-
+        return new RootTree(rootLabel);
     }
 
 }
 
-void Tree::runBFS(Tree &tr, Session& session) {
+void Tree::runBFS(Tree &tr, Session &session) {
     vector<bool> visited(session.getGraph().getSize(), false);
-    vector<Tree*> queue;
+    vector<Tree *> queue;
     queue.push_back(&tr);
-    visited.at(tr.getNode())= true;
+    visited.at(tr.getNode()) = true;
 
 
-    while (!queue.empty())
-    {
-        Tree* curr = queue.front();
+    while (!queue.empty()) {
+        Tree *curr = queue.front();
         queue.erase(queue.begin());
-        for (int neighbor : session.getGraph().neighborsOf(curr->getNode()))
-        {
+        for (int neighbor : session.getGraph().neighborsOf(curr->getNode())) {
             if (!visited.at(neighbor)) {
-               Tree* son= createTree(session, neighbor);
+                Tree *son = createTree(session, neighbor);
 
-               curr->addChild(*son);
+                curr->addChild(*son);
                 queue.push_back(curr->children.back());
-               visited[neighbor]= true;
+                visited[neighbor] = true;
+                delete son;
 
             }
         }
 
     }
 
-return;
+    return;
 }
 
 int Tree::getNode() {
@@ -223,15 +217,15 @@ int Tree::getNode() {
 
 
 
-    CycleTree::CycleTree(int rootLabel, int currCycle): Tree(rootLabel), currCycle(currCycle) {
-
-    }
-
-    CycleTree::~CycleTree()    {
+CycleTree::CycleTree(int rootLabel, int currCycle) : Tree(rootLabel), currCycle(currCycle) {
 
 }
 
-CycleTree::CycleTree(const CycleTree &other):Tree(other) { //copy constructor //TODO: make it work, how to deep copy?
+CycleTree::~CycleTree() {
+
+}
+
+CycleTree::CycleTree(const CycleTree &other) : Tree(other) { //copy constructor //TODO: make it work, how to deep copy?
 
 }
 
@@ -245,12 +239,14 @@ int CycleTree::getNode() {
 
 int CycleTree::traceTree() {
     int cycle = this->currCycle;
-    CycleTree* curr = this;
-    while(cycle>0&&curr->children.size()!=0){
-        curr = (CycleTree*)curr->children.at(0);
+    CycleTree *curr = this;
+    while (cycle > 0 && curr->children.size() != 0) {
+        curr = (CycleTree *) curr->children.at(0);
         cycle--;
     }
-   return curr->getNode();
+
+
+    return curr->getNode();
 }
 
 

@@ -112,8 +112,6 @@ void Session::steal(Session &session) {
 
 }
 
-
-
 void Session::simulate() {
     int sick_num_before = g.getInfectedNum();
     int sick_num_after = 0;
@@ -133,7 +131,7 @@ void Session::simulate() {
 
     out["graph"] = g.getEdges();
     out["infected"] = g.getInfectedNodes();
-    ofstream i("output11_1.json");
+    ofstream i("output4_4.json");
     i << out;
     std::cout << out << std::endl;
 
