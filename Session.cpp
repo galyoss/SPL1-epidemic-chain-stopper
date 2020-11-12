@@ -7,10 +7,8 @@
 #include <iostream>
 #include "json.hpp"
 #include <fstream>
-#include <sstream>
 #include "vector"
 #include "Graph.h"
-#include "queue"
 
 
 
@@ -86,7 +84,7 @@ Session &Session::operator=(const Session &other) {
 
 void Session::copy(const Session &session) { //deep copy of graph, agents, etc.
 
-    g = session.g; //TODO: make sure graph is deep copied in this way
+    g = session.g;
     for (Agent* age: session.agents)
         agents.push_back(age->clone());
     cycleNum=session.cycleNum;
@@ -131,14 +129,10 @@ void Session::simulate() {
 
     out["graph"] = g.getEdges();
     out["infected"] = g.getInfectedNodes();
-    ofstream i("output4_4.json");
-    i << out;
+    ofstream i("output_sess.json");
+    i << out << endl;
     std::cout << out << std::endl;
 
-
-
-    std::cout << "finished game" << std::endl;
-    //TODO: session finished, build output json here
 }
 void Session::enqueueInfected(int a) {
     g.infectNode(a);

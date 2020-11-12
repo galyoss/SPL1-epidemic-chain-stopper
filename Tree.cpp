@@ -108,7 +108,7 @@ int RootTree::traceTree() {
 RootTree *RootTree::clone() const {
     return new RootTree(*this);
 }
-//TODO: verify make it work
+
 
 //=========MaxRankTree constructors========
 MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
@@ -116,7 +116,7 @@ MaxRankTree::MaxRankTree(int rootLabel) : Tree(rootLabel) {}
 //destructor
 MaxRankTree::~MaxRankTree() {}
 
-MaxRankTree::MaxRankTree(const MaxRankTree &other) : Tree(other) { //TODO: make it work in office hours
+MaxRankTree::MaxRankTree(const MaxRankTree &other) : Tree(other) {
 
 }
 
@@ -225,7 +225,7 @@ CycleTree::~CycleTree() {
 
 }
 
-CycleTree::CycleTree(const CycleTree &other) : Tree(other) { //copy constructor //TODO: make it work, how to deep copy?
+CycleTree::CycleTree(const CycleTree &other) : Tree(other) { //copy constructor
 
 }
 
