@@ -18,6 +18,7 @@
 using namespace std;
 using json=nlohmann::json;
 
+//=======Rule of five==========
 
 Session::Session(const std::string &path):g(), cycleNum(0) {
     std::ifstream f(path);
@@ -47,7 +48,9 @@ Session::Session(const std::string &path):g(), cycleNum(0) {
 
 }
 
-Session::~Session()  {
+
+
+Session::~Session()  { //destructor
     clear();
 }
 
@@ -79,6 +82,7 @@ Session &Session::operator=(const Session &other) {
     }
     return *this;
 }
+
 
 void Session::copy(const Session &session) { //deep copy of graph, agents, etc.
 
@@ -114,14 +118,15 @@ void Session::simulate() {
     int sick_num_before = g.getInfectedNum();
     int sick_num_after = 0;
 
-    while (checkGraph()){
-        cycleNum++;
+    while (sick_num_after!=sick_num_before){
+
         sick_num_before=g.getInfectedNum();
         int agents_num=agents.size();
         for (int i=0;i<agents_num;i++)
             agents.at(i)->act(*this);
 
         sick_num_after=g.getInfectedNum();
+        cycleNum++;
     }
 
     json out;
@@ -129,7 +134,7 @@ void Session::simulate() {
     out["graph"] = g.getEdges();
     out["infected"] = g.getInfectedNodes();
     ofstream i("output11_1.json");
-    out >> i;
+    i << out;
     std::cout << out << std::endl;
 
 
@@ -168,8 +173,6 @@ int Session::dequeueInfected() {
 }
 
 
-
-
 TreeType Session::getTreeType() const {
     return treeType;
 }
@@ -177,35 +180,6 @@ TreeType Session::getTreeType() const {
 int Session::getCycleNum() const {
     return cycleNum;
 }
-
-bool Session::checkGraph() {
-    vector<bool> visited(g.getSize(), false);
-    for (int i = 0; i <visited.size() ; ++i) {
-        if(!visited[i]){ //not visited in this node
-            vector<int> queue;
-            bool firstStatus = g.isInfected(i);
-            queue.push_back(i);
-
-            while (!queue.empty()){ //starting BFS
-                int curr = queue.front();
-                queue.erase(queue.begin());
-                visited[curr]=true;
-                for (int n: g.neighborsOf(curr)) {
-                    if (!visited[n])
-                    {
-
-                        if (g.isInfected(n) != firstStatus)
-                        return true;
-                   else
-                        queue.push_back(n);}
-
-                }
-                }
-
-            }
-        }
-    return false;
-    }
 
 
 

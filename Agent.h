@@ -14,10 +14,15 @@
 class Agent{
 public:
     Agent();
+
     virtual ~Agent();
+
     virtual Agent* clone() const =0;
+
     virtual void act(Session& session)=0;
+
     virtual int getNode() const =0;
+
     virtual bool isVirus() const =0;
 private:
 
@@ -28,12 +33,19 @@ private:
 class ContactTracer: public Agent{
 public:
     ContactTracer();
+
     virtual ~ContactTracer();
+
     ContactTracer(const ContactTracer& other);
+
     ContactTracer* clone() const;
+
     bool isVirus() const;
+
     virtual int getNode() const;
+
     void act(Session& session);
+
 private:
     bool VIRUS;
 
@@ -43,13 +55,21 @@ private:
 class Virus: public Agent{
 public:
     Virus(int _nodeInd);
+
     Virus(const Virus& vir);
+
     virtual ~Virus();
+
     Virus* clone() const;
+
     virtual int getNode() const ;
+
     bool isVirus() const;
+
     void act(Session& session);
+
     bool hasActed() const;
+
 
 private:
     const int nodeInd;

@@ -99,9 +99,6 @@ void Virus::act(Session &session) {
         if (!session.getGraph().isInfected(neighbors[i])) {
             Virus vir(neighbors[i]);
             session.addAgent(vir);
-
-
-
             didInfect=true;
         }
     }
