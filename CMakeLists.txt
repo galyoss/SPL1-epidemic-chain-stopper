@@ -5,14 +5,14 @@ project(Assignment1)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(Assignment1
-        Session.cpp
-        Graph.cpp
-        Agent.cpp
-        Tree.cpp
-        main.cpp
+        src/Session.cpp
+        src/Graph.cpp
+        src/Agent.cpp
+        src/Tree.cpp
+        src/main.cpp
 
-        Agent.h
-        Session.h
-        Graph.h
-        Tree.h
-        json.hpp)
+        Include/Agent.h
+        Include/Session.h
+        Include/Graph.h
+        Include/Tree.h
+        Include/json.hpp)
